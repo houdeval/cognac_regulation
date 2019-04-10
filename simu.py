@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 parameters:
     g : gravity acceleration [m.s^-2]
     m : float mass [kg]
-    a : float added mass [kg]
+    a : float added mass [no dimension]
     r : float radius [m]
     L : float length [m]
     V : float volume [m^3] (optional)
@@ -23,7 +23,7 @@ parameters:
     u : piston flow [m^3.s^-1]
 """
 
-def omega2dvdt(omega=12.4*2.*np.pi/60., lead=0.0175, r_piston=0.025):
+def omega2dvdt(omega=12.4*2.*np.pi/360., lead=0.0175, r_piston=0.025):
 
     """
     Function computing the piston flow u
@@ -44,7 +44,7 @@ def omega2dvdt(omega=12.4*2.*np.pi/60., lead=0.0175, r_piston=0.025):
 g = 9.81 #m.^s-2
 rho_w = 997 #kg.m^3
 
-params = {'r': 0.06, 'L': 0.5, 'a': 1., 'omega' : 12.4*2.*np.pi/60., 'lead' : 0.0175, 'r_piston' : 0.025}
+params = {'r': 0.06, 'L': 0.5, 'a': 1., 'omega' : 12.4*2.*np.pi/360., 'lead' : 0.0175, 'r_piston' : 0.025}
 params['m'] = 1000. * np.pi * params['r'] ** 2 * params['L']
 if 'V' not in params:
     params['V'] = np.pi*params['r']**2*params['L']
@@ -59,7 +59,7 @@ def zf(t, params):
     for initial conditions zf = 0 and vf = 0 at the beginning
     """
     
-    return (params['u']*g*rho_w*t**3) / 6*params['m']*(1+params['a'])
+    return (params['u']*g*rho_w*t**3) / (6*params['m']*(1+params['a']))
 
 
 def vf(t, params):
@@ -69,7 +69,7 @@ def vf(t, params):
     for initial conditions zf = 0 and vf = 0 at the beginning
     """
     
-    return (params['u']*g*rho_w*t**2) / 2*params['m']*(1+params['a'])
+    return (params['u']*g*rho_w*t**2) / (2*params['m']*(1+params['a']))
 
 
 def tv(v, params):
@@ -90,129 +90,162 @@ def zv(v, params):
 
 if __name__ == '__main__':
     
-    """ Float position as a function of time, depending on the added mass (a) and the piston flow u """
-    t = np.linspace(0,100,200)
+    ''' Float position as a function of time, depending 
+    on the added mass (a) and the piston flow u '''
+    
+    Omega = [12.4*2.*np.pi/360., 
+             (12.4*2.*np.pi/360. + 124.*2.*np.pi/360.)/2,
+             124.*2.*np.pi/360., 12.4*2.*np.pi/360., 
+             (12.4*2.*np.pi/360. + 124.*2.*np.pi/360.)/2,
+             124.*2.*np.pi/360., 12.4*2.*np.pi/360., 
+             (12.4*2.*np.pi/360. + 124.*2.*np.pi/360.)/2,
+             124.*2.*np.pi/360.]
+    A = [1, 1, 1, 2, 2, 2, 0, 0, 0]
+    
+    
+    t = np.linspace(0,10,100)
     fig, ax = plt.subplots()
+    for o,a in zip(Omega,A):
+        params['omega'] = o
+        params['u'] = omega2dvdt(params['omega'], params['lead'], params['r_piston'])
+        params['a'] = a
+        if a == 1:
+            color = 'green'
+        elif a == 2:
+            color = 'red'
+        else: # a == 0
+            color = 'black'
+            
+        if 12.4*2.*np.pi/360. - 0.01 <= o <= 12.4*2.*np.pi/360. + 0.01:
+            k = 'k'
+        elif (12.4*2.*np.pi/360. + 124.*2.*np.pi/360.)/2 - 0.01 <= o <= (12.4*2.*np.pi/360. + 124.*2.*np.pi/360.)/2 + 0.01:
+            k = 'k--'
+        else: # 124.*2.*np.pi/360. - 0.01 <= o <= 124.*2.*np.pi/360. + 0.01
+            k = 'k:' 
+        ax.plot(t, zf(t, params),k, c = color,
+                label='a = {}, omega = {:.2e} rad.s^-1'.format(params['a'], o))
     
-    params['omega'] = 12.4*2.*np.pi/60.
-    params['u'] = omega2dvdt(params['omega'], params['lead'], params['r_piston'])
-    params['a'] = 1
-    ax.plot(t, zf(t, params),'k--', c = 'black' ,label='a = {} kg, u = {} m^3.s^-1'.format(params['a'],params['u']))
-    
-    params['omega'] = (12.4*2.*np.pi/60. + 124.*2.*np.pi/60.)/2
-    params['u'] = omega2dvdt(params['omega'], params['lead'], params['r_piston'])
-    params['a'] = 1
-    ax.plot(t, zf(t, params),'k:', c = 'black', label='a = {} kg, u = {} m^3.s^-1'.format(params['a'],params['u']))
-    
-    params['omega'] = 124.*2.*np.pi/60.
-    params['u'] = omega2dvdt(params['omega'], params['lead'], params['r_piston'])
-    params['a'] = 1
-    ax.plot(t, zf(t, params),'k', c = 'black', label='a = {} kg, u = {} m^3.s^-1'.format(params['a'],params['u']))
-    
-    params['omega'] = 12.4*2.*np.pi/60.
-    params['u'] = omega2dvdt(params['omega'], params['lead'], params['r_piston'])
-    params['a'] = 2
-    ax.plot(t, zf(t, params),'k--', c = 'red' ,label='a = {} kg, u = {} m^3.s^-1'.format(params['a'],params['u']))
-    
-    params['omega'] = (12.4*2.*np.pi/60. + 124.*2.*np.pi/60.)/2
-    params['u'] = omega2dvdt(params['omega'], params['lead'], params['r_piston'])
-    params['a'] = 2
-    ax.plot(t, zf(t, params),'k:', c = 'red', label='a = {} kg, u = {} m^3.s^-1'.format(params['a'],params['u']))
-    
-    params['omega'] = 124.*2.*np.pi/60.
-    params['u'] = omega2dvdt(params['omega'], params['lead'], params['r_piston'])
-    params['a'] = 2
-    ax.plot(t, zf(t, params),'k', c = 'red', label='a = {} kg, u = {} m^3.s^-1'.format(params['a'],params['u']))
-    
-    params['omega'] = 12.4*2.*np.pi/60.
-    params['u'] = omega2dvdt(params['omega'], params['lead'], params['r_piston'])
-    params['a'] = 3
-    ax.plot(t, zf(t, params),'k--', c = 'green' ,label='a = {} kg, u = {} m^3.s^-1'.format(params['a'],params['u']))
-    
-    params['omega'] = (12.4*2.*np.pi/60. + 124.*2.*np.pi/60.)/2
-    params['u'] = omega2dvdt(params['omega'], params['lead'], params['r_piston'])
-    params['a'] = 3
-    ax.plot(t, zf(t, params),'k:', c = 'green', label='a = {} kg, u = {} m^3.s^-1'.format(params['a'],params['u']))
-    
-    params['omega'] = 124.*2.*np.pi/60.
-    params['u'] = omega2dvdt(params['omega'], params['lead'], params['r_piston'])
-    params['a'] = 3
-    ax.plot(t, zf(t, params),'k', c = 'green', label='a = {} kg, u = {} m^3.s^-1'.format(params['a'],params['u']))
-    
-    plt.xlabel("Time (s)")
-    plt.ylabel("Depth (m)")
-    plt.title("Float position as a function\n of time")
+    plt.xlabel('Time (s)')
+    plt.ylabel('Depth (m)')
+    plt.title('Float position as a function of time')
     legend = ax.legend(loc='best', shadow=True, fontsize='medium')
-    legend.get_frame().set_facecolor('C0')
     
     
-    """ Float speed as a function of time, depending on the added mass (a) and the piston flow u """
     
+    ''' Float speed as a function of time, depending
+    on the added mass (a) and the piston flow u '''
+    
+    Omega = [12.4*2.*np.pi/360., 
+             (12.4*2.*np.pi/360. + 124.*2.*np.pi/360.)/2,
+             124.*2.*np.pi/360., 12.4*2.*np.pi/360., 
+             (12.4*2.*np.pi/360. + 124.*2.*np.pi/360.)/2,
+             124.*2.*np.pi/360., 12.4*2.*np.pi/360., 
+             (12.4*2.*np.pi/360. + 124.*2.*np.pi/360.)/2,
+             124.*2.*np.pi/360.]
+    A = [1, 1, 1, 2, 2, 2, 0, 0, 0]
+    
+    
+    t = np.linspace(0,10,100)
     fig, ax = plt.subplots()
-
-    params['omega'] = 12.4*2.*np.pi/60.
-    params['u'] = omega2dvdt(params['omega'], params['lead'], params['r_piston'])
-    params['a'] = 1
-    ax.plot(t, vf(t, params),'k--', c = 'black' ,label='a = {} kg, u = {} m^3.s^-1'.format(params['a'],params['u']))
+    for o,a in zip(Omega,A):
+        params['omega'] = o
+        params['u'] = omega2dvdt(params['omega'], params['lead'], params['r_piston'])
+        params['a'] = a
+        if a == 1:
+            color = 'green'
+        elif a == 2:
+            color = 'red'
+        else: # a == 0
+            color = 'black'
+            
+        if 12.4*2.*np.pi/360. - 0.01 <= o <= 12.4*2.*np.pi/360. + 0.01:
+            k = 'k'
+        elif (12.4*2.*np.pi/360. + 124.*2.*np.pi/360.)/2 - 0.01 <= o <= (12.4*2.*np.pi/360. + 124.*2.*np.pi/360.)/2 + 0.01:
+            k = 'k--'
+        else: # 124.*2.*np.pi/360. - 0.01 <= o <= 124.*2.*np.pi/360. + 0.01
+            k = 'k:' 
+        ax.plot(t, vf(t, params),k, c = color,
+                label='a = {}, omega = {:.2e} rad.s^-1'.format(params['a'], o))
     
-    params['omega'] = (12.4*2.*np.pi/60. + 124.*2.*np.pi/60.)/2
-    params['u'] = omega2dvdt(params['omega'], params['lead'], params['r_piston'])
-    params['a'] = 1
-    ax.plot(t, vf(t, params),'k:', c = 'black', label='a = {} kg, u = {} m^3.s^-1'.format(params['a'],params['u']))
-    
-    params['omega'] = 124.*2.*np.pi/60.
-    params['u'] = omega2dvdt(params['omega'], params['lead'], params['r_piston'])
-    params['a'] = 1
-    ax.plot(t, vf(t, params),'k', c = 'black', label='a = {} kg, u = {} m^3.s^-1'.format(params['a'],params['u']))
-    
-    params['omega'] = 12.4*2.*np.pi/60.
-    params['u'] = omega2dvdt(params['omega'], params['lead'], params['r_piston'])
-    params['a'] = 2
-    ax.plot(t, vf(t, params),'k--', c = 'red' ,label='a = {} kg, u = {} m^3.s^-1'.format(params['a'],params['u']))
-    
-    params['omega'] = (12.4*2.*np.pi/60. + 124.*2.*np.pi/60.)/2
-    params['u'] = omega2dvdt(params['omega'], params['lead'], params['r_piston'])
-    params['a'] = 2
-    ax.plot(t, vf(t, params),'k:', c = 'red', label='a = {} kg, u = {} m^3.s^-1'.format(params['a'],params['u']))
-    
-    params['omega'] = 124.*2.*np.pi/60.
-    params['u'] = omega2dvdt(params['omega'], params['lead'], params['r_piston'])
-    params['a'] = 2
-    ax.plot(t, vf(t, params),'k', c = 'red', label='a = {} kg, u = {} m^3.s^-1'.format(params['a'],params['u']))
-    
-    params['omega'] = 12.4*2.*np.pi/60.
-    params['u'] = omega2dvdt(params['omega'], params['lead'], params['r_piston'])
-    params['a'] = 3
-    ax.plot(t, vf(t, params),'k--', c = 'green' ,label='a = {} kg, u = {} m^3.s^-1'.format(params['a'],params['u']))
-    
-    params['omega'] = (12.4*2.*np.pi/60. + 124.*2.*np.pi/60.)/2
-    params['u'] = omega2dvdt(params['omega'], params['lead'], params['r_piston'])
-    params['a'] = 3
-    ax.plot(t, vf(t, params),'k:', c = 'green', label='a = {} kg, u = {} m^3.s^-1'.format(params['a'],params['u']))
-    
-    params['omega'] = 124.*2.*np.pi/60.
-    params['u'] = omega2dvdt(params['omega'], params['lead'], params['r_piston'])
-    params['a'] = 3
-    ax.plot(t, vf(t, params),'k', c = 'green', label='a = {} kg, u = {} m^3.s^-1'.format(params['a'],params['u']))
-
-    plt.xlabel("Time (s)")
-    plt.ylabel("Speed (m/s)")
-    plt.title("Float speed as a function\n of time")
+    plt.xlabel('Time (s)')
+    plt.ylabel('Velocity (m/s)')
+    plt.title('Float velocity as a function of time')
     legend = ax.legend(loc='best', shadow=True, fontsize='medium')
-    legend.get_frame().set_facecolor('C0')
-    
-    """ Necessary time for the float to reach a given speed """
+
+
+
+    ''' Necessary time for the float to reach a given speed '''
     v = np.linspace(0, 0.1,200)
-    plt.figure()
-    plt.subplot(1,2,1)
-    plt.plot(v, tv(v,params))
-    plt.xlabel("Given speed (m/s)")
-    plt.ylabel("Necessary time (s)")
-    plt.title("Necessary time for the float to reach\n a given speed with a = {} and\n u = {}".format(params['a'], params['u']))
     
-    """ Necessary depth for the float to reach a given speed """
-    plt.subplot(1,2,2)
-    plt.plot(v, zv(v,params))
-    plt.xlabel("Given speed (m/s)")
-    plt.ylabel("Necessary depth (m)")
-    plt.title("Necessary depth for the float to reach\n a given speed with a = {} and\n u = {}".format(params['a'], params['u']))
+    Omega = [12.4*2.*np.pi/360., 
+             (12.4*2.*np.pi/360. + 124.*2.*np.pi/360.)/2,
+             124.*2.*np.pi/360., 12.4*2.*np.pi/360., 
+             (12.4*2.*np.pi/360. + 124.*2.*np.pi/360.)/2,
+             124.*2.*np.pi/360., 12.4*2.*np.pi/360., 
+             (12.4*2.*np.pi/360. + 124.*2.*np.pi/360.)/2,
+             124.*2.*np.pi/360.]
+    A = [1, 1, 1, 2, 2, 2, 0, 0, 0]
+    
+    fig, ax = plt.subplots()
+    for o,a in zip(Omega,A):
+        params['omega'] = o
+        params['u'] = omega2dvdt(params['omega'], params['lead'], params['r_piston'])
+        params['a'] = a
+        if a == 1:
+            color = 'green'
+        elif a == 2:
+            color = 'red'
+        else: # a == 0
+            color = 'black'
+            
+        if 12.4*2.*np.pi/360. - 0.01 <= o <= 12.4*2.*np.pi/360. + 0.01:
+            k = 'k'
+        elif (12.4*2.*np.pi/360. + 124.*2.*np.pi/360.)/2 - 0.01 <= o <= (12.4*2.*np.pi/360. + 124.*2.*np.pi/360.)/2 + 0.01:
+            k = 'k--'
+        else: # 124.*2.*np.pi/360. - 0.01 <= o <= 124.*2.*np.pi/360. + 0.01
+            k = 'k:' 
+        ax.plot(v, tv(v, params),k, c = color,
+                label='a = {}, omega = {:.2e} rad.s^-1'.format(params['a'], o))
+        plt.xlabel('Given speed (m/s)')
+        plt.ylabel('Necessary time (s)')
+        plt.title('Necessary time for the float to reach a given speed with a = {} and u = {}'.format(params['a'], params['u']))
+        legend = ax.legend(loc='best', shadow=True, fontsize='medium')
+    
+    
+    
+    ''' Necessary depth for the float to reach a given speed '''
+    v = np.linspace(0, 0.1,200)
+    
+    Omega = [12.4*2.*np.pi/360., 
+             (12.4*2.*np.pi/360. + 124.*2.*np.pi/360.)/2,
+             124.*2.*np.pi/360., 12.4*2.*np.pi/360., 
+             (12.4*2.*np.pi/360. + 124.*2.*np.pi/360.)/2,
+             124.*2.*np.pi/360., 12.4*2.*np.pi/360., 
+             (12.4*2.*np.pi/360. + 124.*2.*np.pi/360.)/2,
+             124.*2.*np.pi/360.]
+    A = [1, 1, 1, 2, 2, 2, 0, 0, 0]
+    
+    fig, ax = plt.subplots()
+    for o,a in zip(Omega,A):
+        params['omega'] = o
+        params['u'] = omega2dvdt(params['omega'], params['lead'], params['r_piston'])
+        params['a'] = a
+        if a == 1:
+            color = 'green'
+        elif a == 2:
+            color = 'red'
+        else: # a == 0
+            color = 'black'
+            
+        if 12.4*2.*np.pi/360. - 0.01 <= o <= 12.4*2.*np.pi/360. + 0.01:
+            k = 'k'
+        elif (12.4*2.*np.pi/360. + 124.*2.*np.pi/360.)/2 - 0.01 <= o <= (12.4*2.*np.pi/360. + 124.*2.*np.pi/360.)/2 + 0.01:
+            k = 'k--'
+        else: # 124.*2.*np.pi/360. - 0.01 <= o <= 124.*2.*np.pi/360. + 0.01
+            k = 'k:' 
+        ax.plot(v, zv(v, params),k, c = color,
+                label='a = {}, omega = {:.2e} rad.s^-1'.format(params['a'], o))
+        plt.xlabel('Given speed (m/s)')
+        plt.ylabel('Necessary depth (m)')
+        plt.title('Depth traveled before reaching a given speed with a = {} and u = {}'.format(params['a'], params['u']))
+        legend = ax.legend(loc='best', shadow=True, fontsize='medium')
