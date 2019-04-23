@@ -23,7 +23,10 @@ _/dev/mmcblk0p1 57288 14752 42536 26% /boot_
 
 
 
+
 Insert the SD card into a card reader and use the same df -h command to find out what is now available:
+
+
 
 _Filesystem 1K-blocks Used Available Use% Mounted on_
 _rootfs 29834204 15679020 12892692 55% /_
