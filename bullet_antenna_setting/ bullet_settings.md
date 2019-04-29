@@ -16,11 +16,11 @@ With this aim in mind, you has to set a fixed IP address for your computer, comp
 
 Just fill the fields as in the screenshot below, in the IPv4 tab to choose the configuration previously described.
 
-![Bullet_reset](https://github.com/houdeval/cognac_regulation/bullet_antenna_setting/bullet_reset.png)
+![Bullet_reset](https://github.com/houdeval/cognac_regulation/blob/master/bullet_antenna_setting/bullet_reset.png)
 
 * Then open your internet browser and write the IP address of the antenna in the search bar as below. A user name and a password will be required to continue, by default, both should be "ubnt".
 
-![Bullet_setting_page](https://github.com/houdeval/cognac_regulation/bullet_antenna_setting/bullet_setting_page.png)
+![Bullet_setting_page](https://github.com/houdeval/cognac_regulation/blob/master/bullet_antenna_setting/bullet_setting_page.png)
 
 * Next, fill the different fields to configure the antenna as in the following screenshots.
 
