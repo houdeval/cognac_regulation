@@ -6,7 +6,7 @@ Here, the bullet will be used as a router, that is to say many devices will be a
 
 To set the antenna considering that the IP or the password to access the antenna setting page are unknown :
 
-* First, connect both network cables to the adaptator : PWR+DATA OUT is dedicated to the antenna and DATA iN is dedicated to the computer.
+* First, connect both network cables to the adaptator : PWR+DATA OUT is dedicated to the antenna and DATA IN is dedicated to the computer.
 
 * Afterwards, keep pushing the Reset button under the antenna support (about 30 sec) until the light are blinking.
 
