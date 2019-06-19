@@ -30,29 +30,6 @@ tmpfs 176860 0 176860 0% /run/shm
 
 
 
-
-Insert the SD card into a card reader and use the same df -h command to find out what is now available:
-
-
-
-
-
-Which will return something like this:
-
-```
-Filesystem 1K-blocks Used Available Use% Mounted on
-rootfs 29834204 15679020 12892692 55% /
-/dev/root 29834204 15679020 12892692 55% /
-devtmpfs 437856 0 437856 0% /dev
-tmpfs 88432 284 88148 1% /run
-tmpfs 5120 0 5120 0% /run/lock
-tmpfs 176860 0 176860 0% /run/shm
-/dev/mmcblk0p1 57288 14752 42536 26% /boot
-```
-
-
-
-
 Insert the SD card into a card reader and use the same df -h command to find out what is now available:
 
 
