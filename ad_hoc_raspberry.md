@@ -1,4 +1,4 @@
-# Creating an Ad-Hoc network in the Raspberry Pi to connect a PC to the Raspberry Pi directly}
+# Creating an Ad-Hoc network in the Raspberry Pi to connect a PC to the Raspberry Pi directly
 
 
 
