@@ -13,7 +13,7 @@ The parameters at stake can be changed in the file safety.launch in the package 
 |--------------------|-------------------------------|----------------------|---------------------|------------------------------|--------------------|
 |Parameters at stake:|-time_delay_euler_msg          |-safety_pressure_limit|-safety_battery      |-humidity_limit               |max_speed_reset_zero|
 |                    |-time_delay_batteries_msg      |-pressure_limit       |-battery_limit       |-pressure_internal_max        | -time_before_      |
-|                    |-time_delay_internal_sensor_msg|-time_before_         |-delta_volume_allowed|                              |seafloor_emergency  |
+|                    |-time_delay_internal_sensor_msg|-time_before_         |                     |-delta_volume_allowed         |seafloor_emergency  |
 |                    |-time_delay_external_sensor_msg|pressure_emergency    |                     |-delta_ref_allowed            |                    |
 |                    |-time_delay_depth_msg          |                      |                     |-volume_ref                   |                    |
 |                    |-time_delay_piston_state_msg   |                      |                     |-transition_tick_law          |                    |
