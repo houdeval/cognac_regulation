@@ -1,5 +1,5 @@
 # Guide d'utilisation du prototype l'Ifremer
-============================================
+
 
 
 # Mise en route du flotteur
@@ -92,7 +92,7 @@ Attendre un peu puis remettre l'aimant à l'aide des marques pour éteindre le f
 
 - Choisir une position d'équilibre arbitraire en réglant la position du piston (de 0 [complètement sorti] à 5700 [complètement rentré], les commandes sont expliquées après). Cette position correspond au critère suivant : lors qu'on rentre un peu plus le piston par rapport à cette position, le flotteur doit commencer à couler. Le choix de cette position résulte d'un compromis entre le fait d'avoir les antennes bien sorties en surface ou le fait d'avoir beaucoup de réserve de flottabilité lors de la régulation en profondeur.
 
-- Se place à cette position puis ajouter du leste (feuilles de plomb avec scotch robuste, le scotch a également une masse à prendre en compte lors du ballastage) jusqu'à ce que le flotteur soit sur le point de couler.
+- Se placer à cette position puis ajouter du leste (feuilles de plomb avec scotch robuste, le scotch a également une masse à prendre en compte lors du ballastage) jusqu'à ce que le flotteur soit sur le point de couler.
 
 
 # Utilisation principale du flotteur avec le middleware ROS
@@ -180,11 +180,6 @@ Pour se rattacher à un terminal "screen":  `screen -r (tab pour autocomplétion
 
 (les commandes *roslaunch ...* sont à rentrer à la racine de */workspaceFlotteur*).
 
-
-- Lancement du fonctionnement des capteurs (attendre 30 secondes après la commande si on veut accéder au piston):
-```
-roslaunch seabot driver.launch
-```
 
 - Lancement du fonctionnement des capteurs (attendre 30 secondes après la commande si on veut accéder au piston):
 ```
@@ -279,7 +274,7 @@ Ensuite le piston est directement controlable en éxécutant les fichiers suivan
 
 L'architecture logicielle du code décompose *workspaceFlotteur* en plusieurs blocs. Si le code est amené à être exporté de la carte, il suffit de récupérer le dossier */workspaceFlotteur* sans les dossiers *build* ni *devel* qui sont des fichers de compilation. Dans le dossier *src* sont présents les différents packages :
 
-- seabot : package principal qui contient les fichiers de missions et les principaux fichier *.launch*
+- seabot : package principal qui contient les fichiers de missions et les principaux fichiers *.launch*
 
 - seabot_depth_regulation : tout ce qui concerne l'élaboration de la commande lors de la régulation en profondeur
 
@@ -297,17 +292,17 @@ L'architecture logicielle du code décompose *workspaceFlotteur* en plusieurs bl
 
 - seabot_waypoint_regulation : pour faire de la régulation horizontale mais inutile sur le flotteur de l'Ifremer
 
-Par ailleurs, chaque package se compose au moins d'un fichier de compilation, très souvent d'un dossier *src* qui contient les codes bas niveau en *.cpp* et d'un dossier *launch* qui contient les fichier *.launch* associés au package.
+Par ailleurs, chaque package se compose au moins d'un fichier de compilation, très souvent d'un dossier *src* qui contient les codes bas niveau en *.cpp* et d'un dossier *launch* qui contient les fichiers *.launch* associés au package.
 
 ![Software architecture](https://github.com/houdeval/cognac_regulation/blob/master/user_guide_ifremer_float/ifremer_float_software_architecture.png)
 
-## Modification de paramètres des fichier *.launch*
+## Modification de paramètres des fichiers *.launch*
 
 Les différents paramètres situés dans les fichiers *.launch* peuvent être modifiés directement sans recompilation. La syntaxe utilisé est celle du langage XML, les commandes entre les balises <!--  --> correspondent donc à des commentaires.
 
 ## Modification du code en profondeur (fichiers .cpp et nom des fichiers)
 
-Pour lorsque des fichiers *.cpp* ou des noms de fichiers ont été modifiées ou ajoutés, il faut recompiler le code pour que ces modifications soit prises en compte lors de l'éxécution.
+Lorsque des fichiers *.cpp* ou des noms de fichiers ont été modifiés ou ajoutés, il faut recompiler le code pour que ces modifications soit prises en compte lors de l'éxécution.
 
 Pour cela, il faut se placer à la racine de */workspaceFlotteur* et éxécuter la commande :
 
