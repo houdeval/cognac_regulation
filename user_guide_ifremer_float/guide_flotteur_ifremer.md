@@ -373,7 +373,7 @@ roslaunch seabot mission.launch > fichier.log
 
 ![Safety errors](https://github.com/houdeval/cognac_regulation/blob/master/user_guide_ifremer_float/recap_chart_safety_mode.png)
 
-- Problèmes de capteurs, éxécuter `i2cdetect -y 1` pour vérifier que les canaux sont bien présents, 76 (pression, température et humidité interne), 77 (température externe), 38 (piston), 40 (pression externe). On doit en avoir 5.
+- Problèmes de capteurs, éxécuter `i2cdetect -y 1` pour vérifier que les canaux sont bien présents, 76 (pression, température et humidité interne), 77 (température externe), 38 (piston), 40 (pression externe). On doit en avoir 4.
 
 - Test piston sinus (si moteur fonction bien): `roslaunch seabot test_sinus.launch`
 
